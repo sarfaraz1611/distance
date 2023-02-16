@@ -1,0 +1,59 @@
+#include <stdio.h>
+#include <stdlib.h>
+
+#define INF 9999
+#define MAX_NODES 10
+
+int distance[MAX_NODES][MAX_NODES];
+int via[MAX_NODES][MAX_NODES];
+
+void print_table(int nodes) {
+    int i, j;
+    printf("\nRouting table:\n");
+    printf("Dest Node  |  Next Hop  |  Cost\n");
+    for (i = 0; i < nodes; i++) {
+        for (j = 0; j < nodes; j++) {
+            printf("    %d      |      %d     |   %d\n", i, via[i][j], distance[i][j]);
+        }
+    }
+}
+
+void distance_vector(int nodes) {
+    int i, j, k;
+    for (i = 0; i < nodes; i++) {
+        for (j = 0; j < nodes; j++) {
+            for (k = 0; k < nodes; k++) {
+                if (distance[i][j] > distance[i][k] + distance[k][j]) {
+                    distance[i][j] = distance[i][k] + distance[k][j];
+                    via[i][j] = k;
+                }
+            }
+        }
+    }
+    for (i = 0;i<nodes;i++){
+        distance[i][i] = 0;
+    }
+}
+
+int main() {
+    int nodes, i, j;
+
+    printf("Enter the number of nodes: ");
+    scanf("%d", &nodes);
+
+    printf("Enter the distance matrix:\n");
+    for (i = 0; i < nodes; i++) {
+        for (j = 0; j < nodes; j++) {
+            scanf("%d", &distance[i][j]);
+            if (distance[i][j] == 0) {
+                distance[i][j] = INF;
+            }
+            via[i][j] = j;
+        }
+    }
+
+    distance_vector(nodes);
+    print_table(nodes);
+
+    return 0;
+}
